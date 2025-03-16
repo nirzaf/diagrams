@@ -187,20 +187,23 @@ const TCPIPModelDiagram: React.FC<TCPIPModelDiagramProps> = ({
         isHighlighted={layer.name === selectedLayer}
         onClick={() => handleLayerClick(layer.name)}
       >
-        <LayerTitle>{layer.name}</LayerTitle>
+        <LayerTitle>{layer.name} Layer</LayerTitle>
         <LayerDescription>{layer.description}</LayerDescription>
-        <ProtocolList>
-          {layer.protocols.map(protocol => (
-            <Protocol key={protocol}>{protocol}</Protocol>
-          ))}
-        </ProtocolList>
+        <div>
+          <h4 style={{ margin: '0 0 8px 0', fontSize: '16px', color: '#444' }}>Key Protocols:</h4>
+          <ProtocolList>
+            {layer.protocols.map(protocol => (
+              <Protocol key={protocol}>{protocol}</Protocol>
+            ))}
+          </ProtocolList>
+        </div>
         <ResponsibilityList>
           {layer.responsibilities.map(responsibility => (
             <ResponsibilityItem key={responsibility}>{responsibility}</ResponsibilityItem>
           ))}
         </ResponsibilityList>
       </Layer>
-      {index < layers.length - 1 && <DataFlow animate={animateDataFlow} />}
+      {index < (isOSI ? OSILayers.length - 1 : layers.length - 1) && <DataFlow animate={animateDataFlow} />}
     </React.Fragment>
   );
 

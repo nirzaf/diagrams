@@ -14,59 +14,97 @@ const ComparisonContainer = styled.div`
   width: 100%;
   max-width: 900px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 30px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 `;
 
 const ViewTypeSelector = styled.div`
   display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
+  gap: 15px;
+  margin-bottom: 25px;
   justify-content: center;
+  padding: 10px;
+  background-color: #f0f0f0;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 `;
 
 const ViewButton = styled.button<{ isActive: boolean }>`
-  padding: 8px 16px;
-  border-radius: 4px;
-  border: 1px solid #ddd;
+  padding: 10px 20px;
+  border-radius: 6px;
+  border: none;
   background-color: ${props => props.isActive ? '#2196f3' : 'white'};
   color: ${props => props.isActive ? 'white' : '#333'};
   cursor: pointer;
   transition: all 0.3s ease;
+  font-weight: ${props => props.isActive ? '600' : '400'};
+  box-shadow: ${props => props.isActive ? '0 4px 8px rgba(33, 150, 243, 0.3)' : '0 2px 4px rgba(0, 0, 0, 0.05)'};
   
   &:hover {
     background-color: ${props => props.isActive ? '#1976d2' : '#f5f5f5'};
+    transform: translateY(-2px);
   }
 `;
 
 const Table = styled.table`
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
   margin-top: 20px;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 `;
 
 const TableHeader = styled.th`
-  padding: 12px;
+  padding: 15px;
   text-align: left;
-  background-color: #f5f5f5;
-  border: 1px solid #ddd;
+  background-color: #2196f3;
+  color: white;
+  font-weight: 600;
+  border: none;
+  position: relative;
+  
+  &:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 25%;
+    height: 50%;
+    width: 1px;
+    background-color: rgba(255, 255, 255, 0.3);
+  }
 `;
 
 const TableCell = styled.td<{ highlight?: boolean }>`
-  padding: 12px;
-  border: 1px solid #ddd;
-  background-color: ${props => props.highlight ? '#e3f2fd' : 'transparent'};
-`;
-
-const FeatureDescription = styled.div`
-  margin-top: 8px;
-  font-size: 14px;
-  color: #666;
-  font-style: italic;
+  padding: 15px;
+  border-bottom: 1px solid #eee;
+  background-color: ${props => props.highlight ? '#e3f2fd' : 'white'};
+  transition: background-color 0.2s ease;
+  position: relative;
+  
+  &:first-child {
+    font-weight: 500;
+  }
+  
+  &:not(:last-child) {
+    border-right: 1px solid #eee;
+  }
+  
+  tr:hover & {
+    background-color: ${props => props.highlight ? '#bbdefb' : '#f5f5f5'};
+  }
 `;
 
 const ChartContainer = styled.div`
-  height: 400px;
-  margin-top: 20px;
+  height: 450px;
+  margin-top: 25px;
+  padding: 20px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 `;
 
 const TCPUDPComparison: React.FC<TCPUDPComparisonProps> = ({
@@ -140,7 +178,7 @@ const TCPUDPComparison: React.FC<TCPUDPComparisonProps> = ({
               <XAxis dataKey="feature" angle={-45} textAnchor="end" height={70} />
               <YAxis />
               <Tooltip 
-                formatter={(value, name, props) => {
+                formatter={(_value, name, props) => {
                   const originalItem = features.find(f => f.feature === props.payload.feature);
                   return name === 'TCP' 
                     ? [originalItem?.tcpValue, 'TCP'] 
@@ -178,7 +216,7 @@ const TCPUDPComparison: React.FC<TCPUDPComparisonProps> = ({
               />
               <Legend />
               <Tooltip 
-                formatter={(value, name, props) => {
+                formatter={(_value, name, props) => {
                   const originalItem = features.find(f => f.feature === props.payload.feature);
                   return name === 'TCP' 
                     ? [originalItem?.tcpValue, 'TCP'] 

@@ -25,49 +25,77 @@ interface SiteMapGeneratorProps {
 
 const SiteMapContainer = styled.div`
   width: 100%;
-  height: 600px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
+  height: 650px;
+  border: 2px solid #ddd;
+  border-radius: 10px;
   overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  background-color: #f9f9f9;
 `;
 
 const EdgeLabel = styled.div`
   background-color: white;
-  padding: 2px 5px;
-  border-radius: 4px;
+  padding: 5px 8px;
+  border-radius: 6px;
   font-size: 12px;
   border: 1px solid #ddd;
   pointer-events: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  font-weight: 500;
 `;
 
 const NodeContent = styled.div`
-  padding: 10px;
-  border-radius: 4px;
+  padding: 15px;
+  border-radius: 8px;
   background-color: white;
-  border: 1px solid #ddd;
-  width: 180px;
+  border: 2px solid #ddd;
+  width: 220px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  }
 `;
 
 const NodeTitle = styled.div`
   font-weight: bold;
-  margin-bottom: 5px;
-  font-size: 14px;
+  margin-bottom: 8px;
+  font-size: 16px;
+  color: #333;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #eee;
 `;
 
 const NodeDescription = styled.div`
-  font-size: 12px;
-  color: #666;
-  margin-bottom: 8px;
+  font-size: 13px;
+  color: #555;
+  margin-bottom: 12px;
+  line-height: 1.4;
+  font-style: italic;
 `;
 
 const FunctionalityList = styled.ul`
   margin: 0;
-  padding-left: 15px;
-  font-size: 11px;
+  padding-left: 5px;
+  font-size: 12px;
+  list-style-type: none;
 `;
 
 const FunctionalityItem = styled.li`
-  margin-bottom: 2px;
+  margin-bottom: 6px;
+  padding-left: 18px;
+  position: relative;
+  
+  &::before {
+    content: '•';
+    position: absolute;
+    left: 0;
+    color: #2196f3;
+    font-weight: bold;
+    font-size: 16px;
+  }
 `;
 
 // Custom node types
@@ -131,30 +159,44 @@ const nodeTypes = {
 
 // Custom edge with label
 const edgeTypes = {
-  custom: ({ id, sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition, data, style = {}, markerEnd }: any) => {
-    const edgePath = `M${sourceX},${sourceY} L${targetX},${targetY}`;
-    const [edgeCenterX, edgeCenterY] = [(sourceX + targetX) / 2, (sourceY + targetY) / 2];
+  custom: ({ id, sourceX, sourceY, targetX, targetY, data, style = {}, markerEnd }: any) => {
+    // Use bezier curve for smoother edges
+    const midX = (sourceX + targetX) / 2;
+    const midY = (sourceY + targetY) / 2;
+    
+    // Add offset to create a curved path
+    const offset = 50;
+    const controlX = midX;
+    const controlY = midY - offset;
+    
+    // Create a bezier curve path
+    const edgePath = `M${sourceX},${sourceY} Q${controlX},${controlY} ${targetX},${targetY}`;
     
     return (
       <>
         <path
           id={id}
-          style={style}
+          style={{
+            ...style,
+            strokeWidth: 2.5, // Thicker lines for better visibility
+            stroke: data?.type === 'GET' ? '#4caf50' : '#f44336', // Color based on request type
+            opacity: 0.8
+          }}
           className="react-flow__edge-path"
           d={edgePath}
           markerEnd={markerEnd}
         />
         <foreignObject
-          width={80}
-          height={40}
-          x={edgeCenterX - 40}
-          y={edgeCenterY - 20}
+          width={100} // Wider to accommodate text
+          height={50}
+          x={controlX - 50}
+          y={controlY - 25}
           className="edgebutton-foreignobject"
           requiredExtensions="http://www.w3.org/1999/xhtml"
         >
           <EdgeLabel>
             {data?.label}
-            {data?.type && <div style={{ fontSize: '10px', color: data.type === 'GET' ? '#4caf50' : '#f44336' }}>{data.type}</div>}
+            {data?.type && <div style={{ fontSize: '10px', color: data.type === 'GET' ? '#4caf50' : '#f44336', fontWeight: 'bold' }}>{data.type}</div>}
           </EdgeLabel>
         </foreignObject>
       </>

@@ -54,7 +54,7 @@ export interface ClassField {
 export type ClassType = 'Actor' | 'Movie' | 'User' | 'UserReview' | 'ExternalReview';
 
 export interface ClassFields {
-  [key in ClassType]: ClassField[];
+  [key: string]: ClassField[];
 }
 
 export type ViewType = 'masterPage' | 'navigation' | 'movieDetail' | 'rankingView';

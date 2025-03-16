@@ -1,5 +1,5 @@
 // Sample data for diagram components
-import { TCPIPLayerInfo, ProtocolFeature, PageNode, PageConnection, WorkflowStep, ClassField, ClassFields } from './types';
+import { TCPIPLayerInfo, ProtocolFeature, PageNode, PageConnection, WorkflowStep, ClassFields } from './types';
 
 // TCP/IP Model Data
 export const tcpipLayers: TCPIPLayerInfo[] = [
